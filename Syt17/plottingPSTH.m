@@ -1,28 +1,34 @@
 %import createLoader
-import PSTH
-
 import jauimodel.*
 import vuidocument.*
 
 %Data and export folder paths
-dataFolder = "/Volumes/homedir/jnagy2/Data/Syt17 Data/20200716";
-exportName = "20200716RodsPSTH.mat";
-
+dataFolder16 = "/Users/jnagy2/Documents/20200716";
+exportName16 = "20200716RodsPSTH.mat";
+dataFolder21 = "/Users/jnagy2/Documents/20200721";
+exportName21 = "20200721RodsPSTH.mat";
 %% Create Parameters for splitting
 % Activate GUI and make the tree
 params = {'cell.label', 'protocolSettings.lightAmplitude'};
 
 % Used to epochList - could pass in filename instead
-exportPath = fullfile(dataFolder, exportName); 
+exportPath16 = fullfile(dataFolder16, exportName16); 
+exportPath21 = fullfile(dataFolder16, exportName21); 
 
-%% Create Tree with paramters
+
 
 % Get list of epochs. Can use line below to add other experiments. 
-list = riekesuite.analysis.loadEpochList(exportPath, dataFolder);
-% list.append(otherExportPath, otherDataForlder)
+list = riekesuite.analysis.loadEpochList(exportPath16, dataFolder16);
+
+%%
+%list21 = riekesuite.analysis.loadEpochList(exportPath21, dataFolder16);
+
+%%
 
 tree = riekesuite.analysis.buildTree(list, params);
-tree.visualize
+%tree.visualize;
+%%
+gui = epochTreeGUI(tree)
 % gui = epochTreeGUI(tree);
 %%
 % Grab point in tree where we split on cell/branch above where you are
@@ -30,9 +36,11 @@ tree.visualize
 node = tree; 
 node.visualize
 %%
+% Function handle that passes in an epoch and grabs the split value
 getAmpValues = @(epoch) epoch.splitValue;
 amps = unique(arrayfun(getAmpValues, tree.leafNodes.elements));
 %%
+% this is for 0716
 cellInfo = struct();
 cellInfo.Cell11 = {'ON S' 'KO'};
 cellInfo.Cell2 = {'ON S' 'WT'};
@@ -49,10 +57,37 @@ cellInfo.Cell10  = {'OFF S' 'KO'};
 
 cellTypes = {'ON S' 'OFF T' 'OFF S'};
 
+
+%%
+%this is for 0728
+% cellInfo = struct();
+% 
+% cellInfo.Cell2 = {'OFF S' 'WT'};
+% cellInfo.Cell4 = {'ON S' 'WT'};
+% cellInfo.Cell5 = {'OFF S' 'WT'};
+% cellInfo.Cell6 = {'ON S' 'WT'};
+% cellInfo.Cell1 = {'ON S' 'WT'};
+% 
+% 
+% cellTypes = {'ON S' 'OFF T' 'OFF S'};
+
+%%
+
+%this is for 0806
+
+% cellInfo = struct();
+% 
+% cellInfo.Cell7 = {'ON S' 'KO'};
+% cellInfo.Cell4 = {'ON S' 'KO'};
+% cellInfo.Cell2 = {'ON S' 'KO'};
+% cellInfo.Cell1 = {'ON S' 'KO'};
+% 
+% 
+% cellTypes = {'ON S' 'OFF T' 'OFF S'};
+
 %%
 clear cellPsth chartData
 
-txtname= char(datestr((node.epochList.firstValue.cell.startDate)','yyyymmdd'));
 
 % Iterate Cell, Amplitude
 binSize = 30 * 10;
@@ -71,9 +106,9 @@ for ii=1:length(cellTypes)
             for aa = 1:cell.children.length
                 psthBlock = struct();
                 if cellType == "ON S"
-                    avgPsth = PSTH(cell.children(aa), binSize);
+                    avgPsth = JennaPSTH(cell.children(aa), binSize);
                 else
-                    avgPsth = PSTH(cell.children(aa), binSize, false);
+                    avgPsth = JennaPSTH(cell.children(aa), binSize, false);
                 end
                 
                 psthBlock.psth = avgPsth;
@@ -81,6 +116,7 @@ for ii=1:length(cellTypes)
                 psthBlock.strain = thisCellInfo{2}; 
                 psthBlock.lightAmp = num2str(cell.children(aa).splitValue);
                 psthBlock.label = cell.splitValue;
+                psthBlock.name = char(datestr((cell.children(aa).epochList.firstValue.cell.startDate)','yyyymmdd'));
                 chartData{idx} = psthBlock;
                 idx = idx + 1;
             end
@@ -108,6 +144,8 @@ for ii=1:length(cellTypes)
             if strcmp(block.cellType, cellType) && strcmp(amp, block.lightAmp)
                 plot((1:length(block.psth)) * (binSize)/10000, block.psth, 'displayName', strcat(block.strain, " ", block.label), 'color', colors(block.strain))
             end
+                    Name= strcat(block.name,strcat(block.strain, " ", block.label),'.txt');
+        dlmwrite(Name, block.psth', 'delimiter', '\t', 'newline', 'unix');
         end 
         
         title(strcat(cellType, ": Light Intensity ",  amp));

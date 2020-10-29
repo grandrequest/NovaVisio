@@ -1,4 +1,4 @@
-function avgPsth = PSTH(node, binSize, adjustPlease)
+function avgPsth = JennaPSTH(node, binSize, adjustPlease)
 
 if nargin == 3
     adjustPlease = adjustPlease;

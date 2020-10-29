@@ -4,8 +4,8 @@ import jauimodel.*
 import vuidocument.*
 
 %Data and export folder paths
-dataFolder = "/Volumes/homedir/jnagy2/Data/Syt17 Analysis/20200716";
-exportName = "20200716RodsPSTH.mat";
+dataFolder = "/Volumes/homedir/jnagy2/Data/Syt17 Analysis/20200728";
+exportName = "20200728RodsPSTH.mat";
 
 %% Create Parameters for splitting
 % Activate GUI and make the tree
@@ -32,19 +32,30 @@ node.visualize
 getAmpValues = @(epoch) epoch.splitValue;
 amps = unique(arrayfun(getAmpValues, tree.leafNodes.elements));
 %%
+% cellInfo = struct();
+% cellInfo.Cell11 = {'ON S' 'KO'};
+% cellInfo.Cell2 = {'ON S' 'WT'};
+% cellInfo.Cell4 = {'ON S' 'WT'};
+% cellInfo.Cell5 = {'ON S' 'WT'};
+% cellInfo.Cell7 = {'ON S' 'KO'};
+% cellInfo.Cell3 = {'OFF T' 'WT'};
+% cellInfo.Cell6 = {'OFF T' 'WT'};
+% cellInfo.Cell8  = {'OFF T' 'KO'};
+% cellInfo.Cell12 = {'OFF T' 'KO'};
+% cellInfo.Cell1 = {'OFF S' 'WT'};
+% cellInfo.Cell9  = {'OFF S' 'KO'};
+% cellInfo.Cell10  = {'OFF S' 'KO'};
+% 
+% cellTypes = {'ON S' 'OFF T' 'OFF S'};
+%%
 cellInfo = struct();
-cellInfo.Cell11 = {'ON S' 'KO'};
-cellInfo.Cell2 = {'ON S' 'WT'};
+
+cellInfo.Cell2 = {'OFF S' 'WT'};
 cellInfo.Cell4 = {'ON S' 'WT'};
-cellInfo.Cell5 = {'ON S' 'WT'};
-cellInfo.Cell7 = {'ON S' 'KO'};
-cellInfo.Cell3 = {'OFF T' 'WT'};
-cellInfo.Cell6 = {'OFF T' 'WT'};
-cellInfo.Cell8  = {'OFF T' 'KO'};
-cellInfo.Cell12 = {'OFF T' 'KO'};
-cellInfo.Cell1 = {'OFF S' 'WT'};
-cellInfo.Cell9  = {'OFF S' 'KO'};
-cellInfo.Cell10  = {'OFF S' 'KO'};
+cellInfo.Cell5 = {'OFF S' 'WT'};
+cellInfo.Cell6 = {'ON S' 'WT'};
+cellInfo.Cell1 = {'ON S' 'WT'};
+
 
 cellTypes = {'ON S' 'OFF T' 'OFF S'};
 
