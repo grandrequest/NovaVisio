@@ -5,7 +5,6 @@ if nargin == 3
 else 
     adjustPlease = false;
 end
-   
 
 % Get response matrix for each cell and light amplitude
 epochs = node.epochList;

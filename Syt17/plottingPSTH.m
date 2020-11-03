@@ -15,8 +15,6 @@ params = {'cell.label', 'protocolSettings.lightAmplitude'};
 exportPath16 = fullfile(dataFolder16, exportName16); 
 exportPath21 = fullfile(dataFolder16, exportName21); 
 
-
-
 % Get list of epochs. Can use line below to add other experiments. 
 list = riekesuite.analysis.loadEpochList(exportPath16, dataFolder16);
 
@@ -26,7 +24,7 @@ list = riekesuite.analysis.loadEpochList(exportPath16, dataFolder16);
 %%
 
 tree = riekesuite.analysis.buildTree(list, params);
-%tree.visualize;
+tree.visualize;
 %%
 gui = epochTreeGUI(tree)
 % gui = epochTreeGUI(tree);
